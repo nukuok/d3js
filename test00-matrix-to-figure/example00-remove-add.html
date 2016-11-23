@@ -1,0 +1,35 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+      <script src="https://d3js.org/d3.v4.min.js"></script>
+      <script src="data.js"></script>
+  </head>
+  <body>
+    <script>
+     data = [1,2,3]
+     var pgroup = d3.select("body")
+		.selectAll("p")
+		.data(data)
+
+     pgroup.enter()
+	   .append("p")
+	   .text(function(d){return d;})
+
+     data2 = []
+     var pgroup2 = d3.select("body")
+		     .selectAll("p")
+		     .data(data2)
+
+     pgroup2.exit().remove()
+
+     var pgroup3 = d3.select("body")
+		    .selectAll("p")
+		    .data(data_matrix)
+
+     pgroup3.enter()
+		    .append("p")
+		    .text(function(d){return d[1];})
+
+    </script>
+  </body>
+</html>

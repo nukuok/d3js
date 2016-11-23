@@ -1,0 +1,55 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+      <script src="https://d3js.org/d3.v4.js"></script>
+      <script src="data.js"></script>
+  </head>
+  <body>
+    <script>
+     var line = d3.line()
+		  .x(function(d,i) { return i * 10; })
+		  .y(function(d,i) { return d * 10; })
+		  .curve(d3.curveBasis)
+
+     var color = function(i){
+	 if (i == 0) {
+	     return "red";
+	 } else {
+	     return "blue";
+	 }
+     }
+
+     var divgroup = d3.select("body")
+		      .selectAll("div")
+		      .data(data_matrix)
+		      .enter()
+		      .append("div")
+
+     var _ = divgroup.append("p")
+		     .text(function(d){return d[0];})
+
+     var svggroup = divgroup.selectAll("svg")
+			    .data(function(d){return d[1];})
+			    .enter()
+			    .append("svg")
+			    .attr("class", "axis")
+			    .attr("width",500)
+			    .attr("height",200)
+
+     /* var _ = svggroup.text(function(d){return d;})
+	.data(function(d){return d;})*/
+
+     var pathgroup = svggroup.selectAll("path")
+			     .data(function(d){return d;})
+			     .enter()
+			     .append("path")
+			     .text(function(d){return d;})
+
+     var _ = pathgroup.datum(function(d){return d;})
+		      .attr("class", "line")
+		      .attr("d", line)
+		      .attr("fill", "none")
+		      .attr("stroke", function(d,i){return color(i);})
+    </script>
+  </body>
+</html>
