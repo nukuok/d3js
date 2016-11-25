@@ -1,0 +1,152 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <script src="https://d3js.org/d3.v4.js"></script>
+  </head>
+  <body>
+      <script>
+       var svgWidth = 300
+       var svgHeight = 18
+       var padding = 1
+
+       var rowNum = 50
+       var colNum = 20
+
+       var currentRow = 0
+       var selectedHeight = 400
+
+       var dataSet = d3.range(rowNum).map(function(){
+	   return d3.range(colNum).map(function(){
+	       return Math.floor(Math.abs(d3.randomNormal(0,3)()));
+	   })});
+
+       var barWidth = (svgWidth - padding * 2) / (dataSet[0].length)
+
+       var dataSetMax = d3.max(dataSet, function(d){return d3.max(d);})
+
+       var rectValueScaleY = d3.scaleLinear()
+			       .domain([0, dataSetMax])
+			       .range([padding, svgHeight - padding])
+
+       var rectValueScaleX = d3.scaleLinear()
+			       .domain([0, dataSet[0].length - 1])
+			       .range([padding, svgWidth - padding - barWidth])
+
+       var rectValueScaleColor = d3.scaleLinear()
+				   .domain([0, dataSetMax])
+				   .range([0, 1])
+
+       var divs = d3.select('body')
+		    .append('div')
+		    .style('position', 'relative')
+		    .style('padding-left', 100)
+
+       var tableDiv = divs.append('div')
+			  .style('width', svgWidth)
+			  .style('height', svgHeight * rowNum)
+			  .style('position', 'absolute')
+
+       var svgDiv2 = divs.append('div')
+			 .style('width', svgWidth * 3)
+			 .style('height', selectedHeight * 2)
+			 .style('position', 'absolute')
+
+       var svgDiv = divs.append('div')
+			.style('width', svgWidth)
+			.style('position', 'absolute')
+
+       var selected = d3.select('body')
+			.append('div')
+			.style('width', svgWidth * 2)
+			.style('height', selectedHeight)
+			.style('float', 'right')
+			.style('padding-right', 100)
+
+       function updateSelectedDiv(rowId){
+	   var emptyArray = []
+	   var _ = selected.select('svg')
+			   .data(emptyArray)
+			   .exit()
+			   .remove()
+	   var currentSvg = selected.append('svg')
+				    .attr('width', svgWidth * 2)
+				    .attr('height', selectedHeight)
+
+	   var rectGroup = currentSvg.selectAll('rect')
+				   .data(dataSet[rowId])
+				   .enter()
+				   .append('rect')
+				   .attr('x', function(d,i) {return 2 * rectValueScaleX(i);})
+				   .attr('y', function(d) {return selectedHeight - 20 * rectValueScaleY(d);})
+				   .attr('width', function(d) {return 2 * barWidth - 1;})
+				   .attr('height', function(d) {return 20 * rectValueScaleY(d);})
+				   .attr('fill', function(d){return d3.rgb(200 - 144 * rectValueScaleColor(d),
+									   200 - 144 * rectValueScaleColor(d),
+									   255);})
+       }
+
+       function showSvgDiv(dataSet){
+	   var emptyArray = []
+
+	   var svgGroup = svgDiv.selectAll('svg')
+				.data(dataSet)
+				.enter()
+				.append('svg')
+				.attr('width', svgWidth)
+				.attr('height', svgHeight)
+				.on('mouseover', function(d,i){updateSelectedDiv(i)})
+
+	   var rectgroup = svgGroup.selectAll('rect')
+				   .data(function(d){return d;})
+				   .enter()
+				   .append('rect')
+
+	   var _ = rectgroup.merge(rectgroup)
+			    .attr('x', function(d,i) {return rectValueScaleX(i);})
+			    .attr('y', function(d) {return svgHeight - rectValueScaleY(d);})
+			    .attr('width', function(d) {return barWidth - 1;})
+			    .attr('height', function(d) {return rectValueScaleY(d);})
+			    .attr('fill', function(d){return d3.rgb(200 - 144 * rectValueScaleColor(d),
+								    200 - 144 * rectValueScaleColor(d),
+								    255);})
+       }
+
+       function hideSvgDiv(dataSet){
+	   svgDiv.selectAll('svg').remove()
+       }
+
+       function showTableDiv(dataSet){
+	   var table = tableDiv.append('table')
+			       .style('font-size',10)
+			       .style('padding',0)
+			       .style('border',0)
+			       .style('margin',0)
+			       .style('height',svgHeight * rowNum)
+			       .style('width','100%')
+			       .style('text-align','center')
+			       .style('border-collapse','collapse')
+
+	   var trGroup = table.selectAll('tr')
+			      .data(dataSet)
+			      .enter()
+			      .append('tr')
+			      .style('padding',0)
+			      .style('margin',0)
+
+	   var _ = trGroup.selectAll('tr')
+			  .data(function(d){return d;})
+			  .enter()
+			  .append('td')
+			  .style('width',svgWidth / colNum - 2)
+			  .style('padding',0)
+			  .style('border','1px solid grey')
+			  .style('margin',0)
+			  .text(function(d){return d;})
+       }
+
+       function hideTableDiv(dataSet){
+	   tableDiv.select('table').remove()
+       }
+      </script>
+  </body>
+</html>
