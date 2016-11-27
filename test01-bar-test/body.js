@@ -1,0 +1,25 @@
+var divs = d3.select('body')
+    .append('div')
+    .style('position', 'relative')
+    .style('padding-left', 100)
+
+var tableDiv = divs.append('div')
+    .style('width', svgWidth)
+    .style('height', svgHeight * rowNum)
+    .style('position', 'absolute')
+
+var svgDiv2 = divs.append('div')
+    .style('width', svgWidth * 3)
+    .style('height', selectedHeight * 2)
+    .style('position', 'absolute')
+
+var svgDiv = divs.append('div')
+    .style('width', svgWidth)
+    .style('position', 'absolute')
+
+var selected = d3.select('body')
+    .append('div')
+    .style('width', svgWidth)
+    .style('height', selectedHeight)
+    .style('float', 'right')
+    .style('padding-right', 100)
