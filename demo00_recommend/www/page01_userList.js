@@ -1,7 +1,7 @@
-xleft1 = 150
-ytop1 = 20
-xstep1 = 20
-ystep1 = 14
+var xleft1 = 150
+var ytop1 = 20
+var xstep1 = 20
+var ystep1 = 14
 
 function userDataList(gNode, ii) {
     // pageConfigUpdate()
@@ -45,19 +45,26 @@ function page01Animation(){
     oneUserSvg.node().querySelector("#rname").remove()
     userDataList(oneUserSvg.node().querySelector("#data0"),0)
     userDataList(oneUserSvg.node().querySelector("#data1"),12)
-    userDataList(oneUserSvg.node().querySelector("#data2"),24)
+    userDataList(oneUserSvg.node().querySelector("#data2"),35)
     updateUserName(oneUserSvg.node().querySelector("#text0"),0)
     updateUserName(oneUserSvg.node().querySelector("#text1"),12)
-    updateUserName(oneUserSvg.node().querySelector("#text2"),24)
+    updateUserName(oneUserSvg.node().querySelector("#text2"),35)
+
+    oneUserSvg.node().querySelector("#btn01").remove()
+    addBtn02()
 }
 
-oneUserSvg.append('g')
-    .append('rect')
-    .attr("width", 200)
-    .attr("height", 100)
-    .attr("x", 600)
-    .attr("y", 500)
-    .attr("fill","white")
-    .attr("stroke","blue")
-    .on('click',page01Animation)
+function addBtn01() {
+    oneUserSvg.append('g')
+	.append('rect')
+	.attr("id", "btn01")
+	.attr("width", 200)
+	.attr("height", 30)
+	.attr("x", 600)
+	.attr("y", 550)
+	.attr("fill","white")
+	.attr("stroke","blue")
+	.on('click',page01Animation)
+}
 
+addBtn01()

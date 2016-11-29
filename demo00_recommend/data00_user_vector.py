@@ -91,7 +91,8 @@ class Application(object):
             return self.response(start_response, body)
 
         if path == '/data-set':
-            self.backend.generate_centralized_data(100)
+            self.backend.generate_random_data(90)
+            self.backend.generate_centralized_data(10)
             body = str(self.backend.data_matrix.tolist()).encode()
             return self.response(start_response, body)
 

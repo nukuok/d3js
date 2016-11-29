@@ -33,7 +33,7 @@ function oneUser(dataSet, ii) {
 d3.json(host.concat("/data-set"), function(d){dataSet = d;
 					      oneUser(d[0],0);
 					      oneUser(d[12],1);
-					      oneUser(d[24],2);
+					      oneUser(d[35],2);
 					     })
 
 function oneUserRestaurant(restaurantNames) {
@@ -70,4 +70,4 @@ function oneUserName(userName, ii) {
 d3.json(host.concat("/user-names"), function(d){userNames = d;
 						oneUserName(d[0],0);
 						oneUserName(d[12],1);
-						oneUserName(d[24],2);})
+						oneUserName(d[35],2);})
