@@ -38,7 +38,7 @@ def restname_generator():
 
 class DataSet(RecomRelated):
     def __init__(self):
-        self.unum = 50  # maxinum 26 * 26 * 26
+        self.unum = 40  # maxinum 26 * 26 * 26
         self.rnum = 20  # maxinum 20
         RecomRelated.__init__(self, self.unum, self.rnum)
         unames = username_generator()
