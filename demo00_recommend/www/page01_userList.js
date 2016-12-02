@@ -1,4 +1,4 @@
-var xleft1 = 150
+var xleft1 = 70
 var ytop1 = 20
 var xstep1 = 20
 var ystep1 = 14
@@ -10,11 +10,13 @@ function userDataList(gNode, ii) {
     var _ = oneUserGraphGroup
 	.selectAll('rect')
 	.data(dataSet[ii])
+	.attr("stroke-opacity", 1)
 	.transition()
 	.duration(800)
 	.attr("x", function(d,i){return xleft1 + i * xstep1})
 	.attr("y", ytop1 + ystep1 * ii)
-	.attr("fill", "white")
+	.attr("fill", "none")
+	.attr("stroke-opacity", 0)
 	.attr("stroke", "black")
 	.attr("width", xstep1)
 	.attr("height", ystep1)

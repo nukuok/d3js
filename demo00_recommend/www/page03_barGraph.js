@@ -5,15 +5,8 @@ var rectValueScaleY
 var rectValueScaleX
 var rectValueScaleColor
 
-function changeRowColor(rowId){
-    var _ = d3.select(oneUserSvg.node()
-		      .querySelector("#barGraph")
-		      .childNodes[rowId]).selectAll("rect")
-	.attr('fill', function(d,i){
-	    return d3.rgb(255,
-			  200 - 144 * rectValueScaleColor(d),
-			  200 - 144 * rectValueScaleColor(d));
-	})}
+var theTable
+var theseBars
 
 function addSvgDiv(){
     var gGroup = oneUserSvg.append('g')
@@ -33,8 +26,10 @@ function addSvgDiv(){
 	.enter()
 	.append('rect')
 
-    var _ = rectgroup.merge(rectgroup)
-	.attr('x', function(d,i) {return xleft1 + rectValueScaleX(i);})
+    theseBars = rectgroup
+
+    // var _ = rectgroup.merge(rectgroup)
+    var _ = rectgroup.attr('x', function(d,i) {return xleft1 + rectValueScaleX(i);})
 	.attr('y', function(d) {return ytop1 + ystep1 * (d[0] + 1) - rectValueScaleY(d[1]);})
 	.attr('width', function(d) {return xstep1;})
 	.attr('height', function(d) {return rectValueScaleY(d[1]);})
@@ -46,17 +41,11 @@ function addSvgDiv(){
 	.transition()
 	.duration(1000)
 	.attr('opacity', 1)
+
+    theTableNode = oneUserSvg.node().querySelector("#table")
+    theTable = d3.select(theTableNode)
+    theTableNode.parentElement.appendChild(theTableNode)
 }
-
-
-function reverseRowColor(rowId){
-    var _ = d3.select(svgDiv.node()
-		      .childNodes[rowId]).selectAll("rect")
-	.attr('fill', function(d,i,j){
-	    return d3.rgb(200 - 144 * rectValueScaleColor(d),
-			  200 - 144 * rectValueScaleColor(d),
-			  255);
-	})}
 
 // function hideSvgDiv(dataSet){
 //     svgDiv.selectAll('svg').remove()
@@ -64,8 +53,7 @@ function reverseRowColor(rowId){
 
 
 function page03Animation() {
-
-    dataSetMax = d3.max(dataSet, function(d){return d3.max(d);})
+    var dataSetMax = d3.max(dataSet, function(d){return d3.max(d);})
 
     rectValueScaleY = d3.scaleLinear()
 	.domain([0, dataSetMax])
@@ -78,7 +66,6 @@ function page03Animation() {
     rectValueScaleColor = d3.scaleLinear()
 	.domain([0, dataSetMax])
 	.range([0, 1])
-
 
     removePage01Elements();
     addSvgDiv();
@@ -101,6 +88,8 @@ function page03Animation() {
 	.duration(1000)
 	.attr("opacity", 0)
 	.remove()
+
+    addBtn04()
 }
 
 function addBtn03() {

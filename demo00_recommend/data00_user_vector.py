@@ -1,4 +1,5 @@
 import numpy as np
+import numpy.matlib as matlib
 
 from part00_recommend import RecomRelated
 from urllib.parse import parse_qs
@@ -56,6 +57,17 @@ class DataSet(RecomRelated):
     def random_user(self):
         return np.random.randint(self.unum)
 
+    def recommend_for_all_user(self, recommend_num):
+        user_norm = np.linalg.norm(self.data_matrix, axis=1)
+        norm_matrix = np.matrix(matlib.repmat(user_norm, self.rnum, 1).T)
+        normalized_matrix = self.data_matrix / norm_matrix
+        # [OK] all norm = 1, np.min(np.linalg.norm(rr.recommend_for_user(1), axis=1))
+        # return normalized_matrix
+        similiarities = normalized_matrix * normalized_matrix.T
+        recommend_result = np.argsort(similiarities)[:, -2:-recommend_num - 2:-1]
+        self.similiarities = similiarities
+        return recommend_result
+
 
 class Application(object):
     def __init__(self):
@@ -98,6 +110,10 @@ class Application(object):
 
         if path == '/recommend':
             body = str(self.backend.recommend_for_user(uid, 5).tolist()).encode()
+            return self.response(start_response, body)
+
+        if path == '/recommend-for-all':
+            body = str(self.backend.recommend_for_all_user(5).tolist()).encode()
             return self.response(start_response, body)
 
         # if path == '/':

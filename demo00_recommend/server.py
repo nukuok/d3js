@@ -48,6 +48,7 @@ application.update_path_route("/user-names", data00_user_vector.Application())
 application.update_path_route("/restaurant-names", data00_user_vector.Application())
 application.update_path_route("/data-set", data00_user_vector.Application())
 application.update_path_route("/recommend", data00_user_vector.Application())
+application.update_path_route("/recommend-for-all", data00_user_vector.Application())
 application.update_path_route("/", data00_user_vector.Application())
 
 if __name__ == '__main__':

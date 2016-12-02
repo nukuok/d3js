@@ -28,15 +28,6 @@ function page02Animation() {
 	.enter()
 	.append('g')
 
-    var _ = gGroups.append('rect')
-	.data(d3.range(dataSet.length))
-	.attr("x", xleft1)
-	.attr("y", function(d,i){return ytop1 + ystep1 * d})
-	.attr("fill", "white")
-	.attr("stroke", "black")
-	.attr("width", xstep1 * dataSet[0].length)
-	.attr("height", ystep1)
-
     var _ = gGroups.selectAll('rect')
 	.data(function(d,i){return d.map(function(dd){return [i,dd]});})
 	.enter()
@@ -44,7 +35,8 @@ function page02Animation() {
 	.attr("class", "occ")
 	.attr("x", function(d,i){return xleft1 + i * xstep1})
 	.attr("y", function(d,i){return ytop1 + ystep1 * d[0]})
-	.attr("fill", "white")
+	.attr("fill", "none")
+	.attr("stroke-opacity", 0.2)
 	.attr("stroke", "black")
 	.attr("width", xstep1)
 	.attr("height", ystep1)
@@ -68,6 +60,17 @@ function page02Animation() {
 	.attr("y", function(d,i){return ytop1 + ystep1 * 3 / 4 + ystep1 * i})
 	.text(function(d,i){return userNames[i]})
 
+    var _ = gGroups.append('rect')
+	.data(d3.range(dataSet.length))
+	.attr("x", xleft1)
+	.attr("y", function(d,i){return ytop1 + ystep1 * d})
+	.attr("fill-opacity",0)
+	.attr("fill", "white")
+	// .attr("stroke-opacity", 0)
+	.attr("stroke", "none")
+	.attr("width", xstep1 * dataSet[0].length)
+	.attr("height", ystep1)
+
     var whiteboard = oneUserSvg.append('rect')
 	.attr("id", "wb")
 	.attr("x", xleft1 - 2 - xstep1 * 3)
@@ -80,13 +83,13 @@ function page02Animation() {
     bringFrontPage01Elements()
 
     var _ = d3.select(oneUserSvg.node().querySelector("#wb")).transition()
-	.duration(150)
+	.duration(1000)
 	.attr("height",0)
     	.attr("y", ytop1 + ystep1 * 40 + 2)
 	.remove()
 
-    addBtn03()
     oneUserSvg.node().querySelector("#btn02").remove()
+    addBtn03()
 }
 
 function addBtn02() {

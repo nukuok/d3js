@@ -15,7 +15,7 @@ function oneUser(dataSet, ii) {
 	.append('rect')
 	.attr("x", function(d,i){return xleft + i * xstep})
 	.attr("y", ytop + ystep * ii)
-	.attr("fill", "white")
+	.attr("fill", "none")
 	.attr("stroke", "black")
 	.attr("width", xstep)
 	.attr("height", ystep)
