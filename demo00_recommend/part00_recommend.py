@@ -4,7 +4,7 @@ import numpy.matlib as matlib
 
 class RecomRelated(object):
     def __init__(self, USER_NUM=5000, RESTAURANT_NUM=100):
-        random_matrix = np.floor(np.random.rand(USER_NUM, RESTAURANT_NUM) * 10)
+        random_matrix = np.floor(np.random.rand(USER_NUM, RESTAURANT_NUM) * 10).astype(np.uint8)
         random_matrix[random_matrix > 3] = 0
         self.data_matrix = np.matrix(random_matrix.reshape(USER_NUM, RESTAURANT_NUM))
         self.unum = USER_NUM
@@ -25,8 +25,8 @@ class RecomRelated(object):
         rand_user = np.floor(np.random.rand(num) * self.unum).astype(np.uint8)
         rand_restaurant = [min(self.rnum - 1,
                                max(0,
-                                   np.random.normal(uid % self.rnum,
-                                                    max(1, uid // self.rnum))))
+                                   np.int(np.random.normal(uid % self.rnum,
+                                                           max(1, uid // self.rnum)))))
                            for uid in rand_user]
 
         for ii in range(num):
