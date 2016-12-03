@@ -1,3 +1,5 @@
+import data00_user_vector
+
 # DEBUG = 1
 
 # def debug(*args):
@@ -40,16 +42,16 @@ class RootApp(object):
         return app(environ, start_response)
 
 application = RootApp()
+recommend_application = data00_user_vector.Application()
 
 application.update_path_route("/", IndexApp())
 application.update_path_route("/favicon.ico", EmptyApp())
-import data00_user_vector
-application.update_path_route("/user-names", data00_user_vector.Application())
-application.update_path_route("/restaurant-names", data00_user_vector.Application())
-application.update_path_route("/data-set", data00_user_vector.Application())
-application.update_path_route("/recommend", data00_user_vector.Application())
-application.update_path_route("/recommend-for-all", data00_user_vector.Application())
-application.update_path_route("/", data00_user_vector.Application())
+application.update_path_route("/user-names", recommend_application)
+application.update_path_route("/restaurant-names", recommend_application)
+application.update_path_route("/data-set", recommend_application)
+application.update_path_route("/recommend", recommend_application)
+application.update_path_route("/recommend-for-all", recommend_application)
+application.update_path_route("/", recommend_application)
 
 if __name__ == '__main__':
     from wsgiref.simple_server import make_server

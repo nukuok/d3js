@@ -53,7 +53,7 @@ function addSvgDiv(){
 
 
 function page03Animation() {
-    var dataSetMax = d3.max(dataSet, function(d){return d3.max(d);})
+    dataSetMax = d3.max(dataSet, function(d){return d3.max(d);})
 
     rectValueScaleY = d3.scaleLinear()
 	.domain([0, dataSetMax])

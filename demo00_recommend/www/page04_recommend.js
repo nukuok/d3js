@@ -1,4 +1,6 @@
 var recommendSet
+var simValueSet
+var recommendTarget
 var currentRowId = 0
 
 var xlefttarget = 550
@@ -8,12 +10,18 @@ var ysteptarget = 60
 
 var recommendNum = 5
 var recommendGroup
+var recommendUserGroup
 var histHeight = 540/(5 + 1)
 
 var cateNum = 20
 var pathFix = 20
-var pathBlank = 3
+var pathBlank = 5
 var pathGroup
+
+var floatFormat = d3.format(".4f")
+
+var xaxises
+var yaxises
 
 var lineFunction = d3.line()
     .x(function(d) { return d[0]; })
@@ -29,7 +37,7 @@ function generateLineData(ii, rtId){
 }
 
 function changeUserColor(){
-    var dataSetMax = d3.max(dataSet[currentRowId])
+    dataSetMax = d3.max(dataSet, function(d){return d3.max(d);})
 
     rectValueScaleColor = d3.scaleLinear()
 	.domain([0, dataSetMax])
@@ -47,7 +55,7 @@ function changeUserColor(){
 	})
 
     recommendSet[currentRowId].map(function(d){
-	var dataSetMax = d3.max(dataSet[d])
+	dataSetMax = d3.max(dataSet, function(d){return d3.max(d);})
 
 	rectValueScaleColor = d3.scaleLinear()
 	    .domain([0, dataSetMax])
@@ -63,6 +71,82 @@ function changeUserColor(){
 			      255,
 			      c);
 	    })})
+}
+
+function drawAxis(){
+    rectValueScaleY = d3.scaleLinear()
+	.domain([0, 1])
+	.range([ysteptarget, 0])
+
+    rectValueScaleX = d3.scaleLinear()
+	.domain([0, 21])
+	.range([0, cateNum * xsteptarget])
+
+    var xAxis = d3.axisBottom()
+	.scale(rectValueScaleX)
+	.ticks(20)
+	.tickFormat("")
+
+    var yAxis = d3.axisLeft()
+	.scale(rectValueScaleY)
+	.ticks(2)
+
+    yaxises = oneUserSvg.append('g')
+	.attr("id","yaxises")
+    yaxises.selectAll('g')
+	.data(d3.range(1 + recommendNum))
+	.enter()
+	.append('g')
+	.attr("transform",
+	      function(d){
+		  var y = ytoptarget + histHeight * d + histHeight - ysteptarget
+		  return "translate(" + xlefttarget + "," + y + ")"})
+	.call(yAxis)
+
+    xaxises = oneUserSvg.append('g')
+	.attr("id","xaxises")
+    xaxises.selectAll('g')
+	.data(d3.range(1 + recommendNum))
+	.enter()
+	.append('g')
+	.attr("transform",
+	      function(d){
+		  var y = ytoptarget + histHeight * d + histHeight
+		  return "translate(" + xlefttarget + "," + y + ")"})
+	.call(xAxis)
+}
+
+function addNamesSims(crid){
+    recommendUserGroup = oneUserSvg.append("g")
+	.attr("id","recommendlabel")
+
+    recommendUserGroup.append("text")
+	.attr("fill", "red")
+	.attr("font-family","sans-serif")
+	.attr("font-size","16px")
+	.attr("x", function(d,i){return xlefttarget + xstep1})
+	.attr("y", function(d,i){return ytoptarget + ysteptarget * 4/7})
+	.text(userNames[crid])
+
+    d3.range(5).map(function(ii){
+	recommendUserGroup.append("text")
+	    .attr("fill", "green")
+	    .attr("font-family","sans-serif")
+	    .attr("font-size","16px")
+	    .attr("x", function(d,i){return xlefttarget + xstep1})
+	    .attr("y", function(d,i){return ytoptarget + histHeight * (ii + 1) + ysteptarget * 4/7})
+	    .text(userNames[recommendSet[crid][ii]])
+    })
+
+    d3.range(5).map(function(ii){
+	recommendUserGroup.append("text")
+	    .attr("fill", "green")
+	    .attr("font-family","sans-serif")
+	    .attr("font-size","16px")
+	    .attr("x", function(d,i){return xlefttarget + xstep1 * 5})
+	    .attr("y", function(d,i){return ytoptarget + histHeight * (ii + 1) + ysteptarget * 4/7})
+	    .text("類似度:  " +  floatFormat(simValueSet[crid][ii]))
+    })
 }
 
 function drawPaths(){
@@ -88,16 +172,19 @@ function page04NewElements() {
 
     page04RecommendTarget(recommendGroup)
     d3.json(host.concat("/recommend-for-all"),
-	    function(d){recommendSet = d;
+	    function(d){recommendSet = d[0];
+			simValueSet = d[1];
 			changeUserColor();
-			drawPaths();
+			drawAxis();
+			addNamesSims(0);
+			// drawPaths();
 			d3.range(5).map(
 			    function(d){page04RecommendedTargets(recommendGroup, d)})})
 
 }
 
 function page04RecommendTarget(rG) {
-    dataSetMax = d3.max(dataSet[currentRowId])
+    dataSetMax = d3.max(dataSet, function(d){return d3.max(d);})
 
     rectValueScaleY = d3.scaleLinear()
 	.domain([0, dataSetMax])
@@ -111,9 +198,10 @@ function page04RecommendTarget(rG) {
 	.domain([0, dataSetMax])
 	.range([0, 1])
 
-    var recommendTarget = rG.append('g')
+    recommendTarget = rG.append('g')
 	.attr('id','recommendTarget')
-	.selectAll('rect')
+
+    recommendTarget.selectAll('rect')
 	.data(dataSet[currentRowId])
 	.enter()
 	.append('rect')
@@ -133,7 +221,7 @@ function page04RecommendTarget(rG) {
 
 function page04RecommendedTargets(rG, rtid) {
     targetId = recommendSet[currentRowId][rtid]
-    dataSetMax = d3.max(dataSet[targetId])
+    dataSetMax = d3.max(dataSet, function(d){return d3.max(d);})
 
     rectValueScaleY = d3.scaleLinear()
 	.domain([0, dataSetMax])
@@ -147,7 +235,7 @@ function page04RecommendedTargets(rG, rtid) {
 	.domain([0, dataSetMax])
 	.range([0, 1])
 
-    var recommendTarget = rG.append('g')
+    var recommendedResult = rG.append('g')
 	.attr('class','recommendResult' + rtid)
 	.selectAll('rect')
 	.data(dataSet[targetId])

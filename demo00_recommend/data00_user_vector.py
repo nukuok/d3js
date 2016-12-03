@@ -65,14 +65,17 @@ class DataSet(RecomRelated):
         # return normalized_matrix
         similiarities = normalized_matrix * normalized_matrix.T
         recommend_result = np.argsort(similiarities)[:, -2:-recommend_num - 2:-1]
+        sim_result = np.vstack(similiarities[recommend_result[ii], ii] for ii in range(self.unum))
         self.similiarities = similiarities
-        return recommend_result
+        return [recommend_result.tolist(), sim_result.tolist()]
 
 
 class Application(object):
     def __init__(self):
         # self.path = '/user-vector'
         self.backend = DataSet()
+        self.backend.generate_random_data(2400)
+        self.backend.generate_centralized_data(200)
 
     def response(self, start_response, body):
         start_response("200 OK", [('Content-type', 'application/json; charset=UTF-8'),
@@ -87,6 +90,7 @@ class Application(object):
     #     return [body]
 
     def __call__(self, environ, start_response):
+
         raw_uid = parse_qs(environ['QUERY_STRING']).get('uid')
         if raw_uid:
             uid = int(raw_uid[0])
@@ -103,8 +107,6 @@ class Application(object):
             return self.response(start_response, body)
 
         if path == '/data-set':
-            self.backend.generate_random_data(90)
-            self.backend.generate_centralized_data(10)
             body = str(self.backend.data_matrix.tolist()).encode()
             return self.response(start_response, body)
 
@@ -113,7 +115,7 @@ class Application(object):
             return self.response(start_response, body)
 
         if path == '/recommend-for-all':
-            body = str(self.backend.recommend_for_all_user(5).tolist()).encode()
+            body = str(self.backend.recommend_for_all_user(5)).encode()
             return self.response(start_response, body)
 
         # if path == '/':

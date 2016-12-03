@@ -59,7 +59,8 @@ function reverseUserColor(){
 }
 
 function changeNewUserColor(i){
-    var dataSetMax = d3.max(dataSet[i])
+    dataSetMax = d3.max(dataSet, function(d){return d3.max(d);})
+    // var dataSetMax = d3.max(dataSet[i])
     reverseUserColor();
 
     rectValueScaleColor = d3.scaleLinear()
@@ -78,7 +79,8 @@ function changeNewUserColor(i){
 	})
 
     recommendSet[i].map(function(d){
-	var dataSetMax = d3.max(dataSet[d])
+	dataSetMax = d3.max(dataSet, function(d){return d3.max(d);})
+	// var dataSetMax = d3.max(dataSet[d])
 
 	rectValueScaleColor = d3.scaleLinear()
 	    .domain([0, dataSetMax])
@@ -108,7 +110,8 @@ function changePaths(i){
 }
 
 function changeRecommend(i){
-    dataSetMax = d3.max(dataSet[i])
+    dataSetMax = d3.max(dataSet, function(d){return d3.max(d);})
+    // dataSetMax = d3.max(dataSet[i])
 
     rectValueScaleY = d3.scaleLinear()
 	.domain([0, dataSetMax])
@@ -140,7 +143,8 @@ function changeRecommend(i){
 function changeRecommendResults(ii){
     d3.range(recommendNum).map(function(rtid){
 	targetId = recommendSet[ii][rtid]
-	dataSetMax = d3.max(dataSet[targetId])
+	dataSetMax = d3.max(dataSet, function(d){return d3.max(d);})
+	// dataSetMax = d3.max(dataSet[targetId])
 
 	rectValueScaleY = d3.scaleLinear()
 	    .domain([0, dataSetMax])
@@ -154,7 +158,7 @@ function changeRecommendResults(ii){
 	    .domain([0, dataSetMax])
 	    .range([0, 1])
 
-	console.log(rtid)
+	// console.log(rtid)
 	recommendGroup.select("g.recommendResult" + rtid)
 	    .selectAll('rect')
 	    .data(dataSet[targetId])
@@ -165,7 +169,7 @@ function changeRecommendResults(ii){
 	    .attr('width', function(d) {return xsteptarget;})
 	    .attr('height', function(d) {return rectValueScaleY(d);})
 	    .attr('fill', function(d,i){
-		console.log(ii, rtid, targetId)
+		// console.log(ii, rtid, targetId)
 		return d3.rgb(200 - 144 * rectValueScaleColor(d),
 			      255,
 			      200 - 144 * rectValueScaleColor(d))})
@@ -177,7 +181,9 @@ function tableListening(){
 	.on('mouseover', function(d,i){
 	    // console.log(i)
 	    changeNewUserColor(i);
-	    changePaths(i);
+	    // changePaths(i);
+	    recommendUserGroup.remove();
+	    addNamesSims(i);
 	    changeRecommend(i);
 	    changeRecommendResults(i);
 	    currentRow = i;})
